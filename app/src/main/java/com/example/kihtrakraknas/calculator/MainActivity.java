@@ -2,6 +2,8 @@ package com.example.kihtrakraknas.calculator;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,10 +17,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         display = findViewById(R.id.id_dispay);
+        //display.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void NumberClicked(View v) {
-        String prevChar = "";
+        if(display.getText().equals("ERROR"))
+            display.setText("");
+        String prevChar = " ";
         if(display.getText().length()-1>0)
             prevChar = ((String)display.getText()).substring(display.getText().length()-1,display.getText().length());
         if(prevChar.equals("+")||prevChar.equals("-")||prevChar.equals("/")||prevChar.equals("*")){
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public void MakeNumNeg(View v) {
         String[] strs = ((String)display.getText()).split(" ");
         String newText = "";
+        if(!((String)display.getText()).equals(""))
         for(int i = 0; i!=strs.length; i++){
             if (!newText.equals(""))
                 newText +=" ";
@@ -54,17 +60,84 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void equals(View v) {
-        String[] strs = ((String)display.getText()).split(" ");
-        ArrayList<String> strsList = new ArrayList<String>();
-        for(int i = 0; i!=strsList.size(); i++) {
-            if(strsList.get(i).equals("*")||strs[i].equals("/")){
-                int answer;
-                if(strsList.get(i).equals("*"))
-                    answer = Integer.parseInt(strsList.get(i-1)) * Integer.parseInt(strsList.get(i-1));
-                else
-                    answer = Integer.parseInt(strsList.get(i-1)) / Integer.parseInt(strsList.get(i-1));
-
+        try {
+            String[] strs = ((String) display.getText()).split(" ");
+            ArrayList<String> strsList = new ArrayList<String>();
+            for (int i = 0; i != strs.length; i++) {
+                strsList.add(strs[i]);
             }
+            for (int i = 0; i != strsList.size(); i++) {
+                Log.d("i", "" + i);
+                if (strsList.get(i).equals("*") || strsList.get(i).equals("/")) {
+                    Double answer;
+                    Double num1;
+                    String old1 = strsList.get(i - 1);
+
+                    if (old1.length() > 3 && old1.substring(0, 2).equals("(-") && old1.substring(old1.length() - 1, old1.length()).equals(")")) {
+                        num1 = -1 * Double.parseDouble(old1.substring(2, old1.length() - 1));
+                    } else {
+                        num1 = Double.parseDouble(old1);
+                    }
+
+                    Double num2;
+                    String old2 = strsList.get(i + 1);
+                    if (old2.length() > 3 && old2.substring(0, 2).equals("(-") && old2.substring(old2.length() - 1, old2.length()).equals(")")) {
+                        num2 = -1 * Double.parseDouble(old2.substring(2, old2.length() - 1));
+                    } else {
+                        num2 = Double.parseDouble(old2);
+                    }
+
+                    if (strsList.get(i).equals("*"))
+                        answer = num1 * num2;
+                    else
+                        answer = num1 / num2;
+
+                    Log.d("calc", "" + strsList);
+                    strsList.remove(i + 1);
+                    strsList.set(i, "" + answer);
+                    strsList.remove(i - 1);
+                    i -= 2;
+                }
+            }
+            for (int i = 0; i != strsList.size(); i++) {
+                if (strsList.get(i).equals("+") || strsList.get(i).equals("-")) {
+                    Double answer;
+                    Double num1;
+                    String old1 = strsList.get(i - 1);
+
+                    if (old1.length() > 3 && old1.substring(0, 2).equals("(-") && old1.substring(old1.length() - 1, old1.length()).equals(")")) {
+                        num1 = -1 * Double.parseDouble(old1.substring(2, old1.length() - 1));
+                    } else {
+                        num1 = Double.parseDouble(old1);
+                    }
+
+                    Double num2;
+                    String old2 = strsList.get(i + 1);
+                    if (old2.length() > 3 && old2.substring(0, 2).equals("(-") && old2.substring(old2.length() - 1, old2.length()).equals(")")) {
+                        num2 = -1 * Double.parseDouble(old2.substring(2, old2.length() - 1));
+                    } else {
+                        num2 = Double.parseDouble(old2);
+                    }
+
+
+                    if (strsList.get(i).equals("+"))
+                        answer = num1 + num2;
+                    else
+                        answer = num1 - num2;
+                    Log.d("calc", "" + strsList);
+                    strsList.remove(i + 1);
+                    strsList.set(i, "" + answer);
+                    strsList.remove(i - 1);
+                    i -= 2;
+                }
+            }
+            Log.d("final", "" + strsList);
+            if (new Double((int) (Double.parseDouble(strsList.get(0)))) == Double.parseDouble(strsList.get(0)))
+                strsList.set(0, "" + (int) (Double.parseDouble(strsList.get(0))));
+            display.setText(strsList.get(0));
+        }catch(Exception e){
+            display.setText("ERROR");
         }
     }
+
 }
