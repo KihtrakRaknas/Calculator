@@ -134,7 +134,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d("final", "" + strsList);
             if (new Double((int) (Double.parseDouble(strsList.get(0)))) == Double.parseDouble(strsList.get(0)))
                 strsList.set(0, "" + (int) (Double.parseDouble(strsList.get(0))));
-            display.setText(strsList.get(0));
+            if(Double.isInfinite(Double.parseDouble(strsList.get(0))))
+                display.setText("ERROR");
+            else
+                display.setText(strsList.get(0));
         }catch(Exception e){
             display.setText("ERROR");
         }
