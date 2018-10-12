@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         display = findViewById(R.id.id_dispay);
-        //display.setMovementMethod(new ScrollingMovementMethod());
+        display.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void NumberClicked(View v) {
@@ -25,16 +25,16 @@ public class MainActivity extends AppCompatActivity {
             display.setText("");
         String prevChar = " ";
         if(display.getText().length()-1>0)
-            prevChar = ((String)display.getText()).substring(display.getText().length()-1,display.getText().length());
+            prevChar = (""+display.getText()).substring(display.getText().length()-1,display.getText().length());
         if(prevChar.equals("+")||prevChar.equals("-")||prevChar.equals("/")||prevChar.equals("*")){
-            display.setText((String)display.getText()+" "+(String)((Button)v).getText());
+            display.setText(""+display.getText()+" "+((Button)v).getText());
         }else{
-            display.setText((String)display.getText()+(String)((Button)v).getText());
+            display.setText(""+display.getText()+((Button)v).getText());
         }
     }
 
     public void SignClicked(View v) {
-        display.setText((String)display.getText()+" "+(String)((Button)v).getText());
+        display.setText(""+display.getText()+" "+((Button)v).getText());
     }
 
     public void MakeNumNeg(View v) {
