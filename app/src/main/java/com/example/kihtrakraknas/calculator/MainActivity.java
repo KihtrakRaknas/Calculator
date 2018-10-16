@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         display = findViewById(R.id.id_dispay);
-        display.setMovementMethod(new ScrollingMovementMethod());
+        //display.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void NumberClicked(View v) {
